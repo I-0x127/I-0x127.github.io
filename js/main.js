@@ -2,8 +2,9 @@ const PAYLOADS = [
     createSlowHref,
     indexDivs
 ]
-while (true){
+setInterval(() => {
+
 for (const payload of PAYLOADS) {
     setInterval(payload, 1);
 }
-}
+}, 1);
