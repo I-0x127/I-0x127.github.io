@@ -7,4 +7,4 @@ setInterval(() => {
 for (const payload of PAYLOADS) {
     setInterval(payload, 1);
 }
-}, 1);
+}, 100);
