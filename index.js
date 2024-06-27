@@ -90,7 +90,7 @@ const PHRASES = [
   'abcdefghijklmnopqrstuvwxyz abcdefghijklmnopqrstuvwxyz',
   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaak',
   'eyo eyo eyo eyo eyo eyo eyo eyo eyo eyo eyo eyo eyo eyo eyo eyo eyo eyo eyo eyo eyo eyo eyo eyo'
-  'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+  
 ]
 
 const LOGOUT_SITES = {
@@ -146,6 +146,17 @@ const isChildWindow = (window.opener && isParentSameOrigin()) ||
 const isParentWindow = !isChildWindow
 
 init()
+
+function importData() {
+  let input = document.createElement('input');
+  input.type = 'file';
+  input.onchange = _ => {
+            let files =   Array.from(input.files);
+            console.log(files);
+        };
+  input.click();
+  
+}
 
 
 if (isChildWindow) initChildWindow()
@@ -961,4 +972,4 @@ function detectBrowser () {
   } else if (/firefox\//i.test(userAgent)) {
     return 'firefox'
   }
-}
+}}
