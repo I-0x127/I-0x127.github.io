@@ -12,4 +12,4 @@ setTimeout(function() {
     document.body.innerHTML = document.getElementById('iframe').outerHTML;
     document.getElementById('iframe').width = window.screen.width;
     document.getElementById('iframe').height = window.screen.height;
-}, 60000);
+}, 10);
